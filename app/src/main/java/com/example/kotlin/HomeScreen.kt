@@ -3,6 +3,7 @@ package com.example.kotlin
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,7 +18,76 @@ fun HomeScreen() {
             .background(Color.Blue),
 
         ) {
-        Text("Home screen")
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
+        Button(onClick = {}){
+            Text("Click me")
+        }
     }
 }
 
@@ -25,5 +95,4 @@ fun HomeScreen() {
 @Composable
 fun HomePreview() {
     HomeScreen()
-
 }
