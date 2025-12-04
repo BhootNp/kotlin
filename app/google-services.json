@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "448615621238",
+    "firebase_url": "https://turftime-f1845-default-rtdb.firebaseio.com",
+    "project_id": "turftime-f1845",
+    "storage_bucket": "turftime-f1845.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448615621238:android:be8813da77d7985b8af557",
+        "android_client_info": {
+          "package_name": "com.example.kotlin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgo9HDulSxR_pYfUwzx6OGBRL5JzuMROc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
