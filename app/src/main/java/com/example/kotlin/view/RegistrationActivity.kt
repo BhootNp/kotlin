@@ -1,16 +1,13 @@
-package com.example.kotlin
+package com.example.kotlin.view
 
-import android.app.Activity
-import android.content.Intent
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,28 +15,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,77 +49,63 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.DialogProperties
-import com.example.kotlin.ui.theme.Black
+import com.example.kotlin.R
+import com.example.kotlin.model.UserModel
+import com.example.kotlin.repository.UserRepolmpl
 import com.example.kotlin.ui.theme.Blue
+import com.example.kotlin.ui.theme.Purple80
 import com.example.kotlin.ui.theme.PurpleGrey
 import com.example.kotlin.ui.theme.White
-import kotlinx.coroutines.launch
+import com.example.kotlin.viewmodel.UserViewModel
+import java.util.Calendar
 
-class LoginActivity : ComponentActivity() {
+class RegistrationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            LoginBody()
+            RegisterBody()
         }
     }
 }
 
 @Composable
-fun LoginBody() {
+fun RegisterBody(){
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var visibility by remember { mutableStateOf(false) }
+    var terms by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+    val calendar = Calendar.getInstance()
 
-    val activity = context as Activity
+    val userViewModel = remember{ UserViewModel(UserRepolmpl()) }
 
-    val snackbarHostState = remember { SnackbarHostState() }
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-    val coroutineScope = rememberCoroutineScope ()
+    var selectedDate by remember { mutableStateOf("") }
 
-    var showDialog by remember { mutableStateOf(false) }
+    val datepicker = DatePickerDialog(
+        context,{
+                _,y,m,d-> selectedDate = "$y/${m+1}/$d"
 
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        }
-    ) { padding ->
+        },year,month,day
+    )
+
+
+    Scaffold { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .background(White)
         ) {
-            if(showDialog){
-                AlertDialog(
-                    onDismissRequest = {
-                        showDialog = false
-                    },
-                    confirmButton = {
-                        Text("Ok")
-                    },
-                    dismissButton = {
-                        Text("Cancel")
-                    },
-                    title = {
-                        Text("Confirm")
-                    },
-                    text = {
-                        Text("Are you sure you want  to delete")
-                    },
-                    properties = DialogProperties(
-                        dismissOnBackPress = true,
-                        dismissOnClickOutside = true
-                    )
-                )
-            }
             Spacer(modifier = Modifier.height(50.dp))
             Text(
-                "Sign In",
+                "Sign Up",
                 style = TextStyle(
                     textAlign = TextAlign.Center,
                     fontSize = 24.sp,
@@ -138,57 +115,7 @@ fun LoginBody() {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Text(
-                "This is lorem ipsum, this is ecommerce here you can buy any produycts you want",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 20.dp),
-                style = TextStyle(
-                    textAlign = TextAlign.Center,
-                    color = Black.copy(0.5f)
-                )
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 15.dp)
-            ) {
-                SocialMediaCard(
-                    Modifier
-                        .height(60.dp)
-                        .weight(1f),
-                    R.drawable.images,
-                    "Facebook"
-                )
-                Spacer(modifier = Modifier.width(20.dp))
-
-                SocialMediaCard(
-                    Modifier
-                        .height(60.dp)
-                        .weight(1f),
-                    R.drawable.images,
-                    "Gmail"
-                )
-            }
-
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 40.dp, horizontal = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                HorizontalDivider(
-                    modifier = Modifier.weight(1f)
-                )
-
-                Text("OR", modifier = Modifier.padding(horizontal = 20.dp))
-                HorizontalDivider(
-                    modifier = Modifier.weight(1f)
-                )
-            }
+            Spacer(modifier = Modifier.height(50.dp))
 
             OutlinedTextField(
                 value = email,
@@ -202,8 +129,8 @@ fun LoginBody() {
                     Text("abc@gmail.com")
                 },
                 colors = TextFieldDefaults.colors(
-                    unfocusedContainerColor = PurpleGrey,
-                    focusedContainerColor = PurpleGrey,
+                    unfocusedContainerColor = Purple80,
+                    focusedContainerColor = Purple80,
                     focusedIndicatorColor = Blue,
                     unfocusedIndicatorColor = Color.Transparent
                 ),
@@ -215,11 +142,38 @@ fun LoginBody() {
 
 
             Spacer(modifier = Modifier.height(20.dp))
+            OutlinedTextField(
+                value = selectedDate,
+                onValueChange = {
+                    selectedDate = it
+                },
+                enabled = false,
+                placeholder = {
+                    Text("dd/mm/yyyy")
+                },
+                colors = TextFieldDefaults.colors(
+                    disabledContainerColor = PurpleGrey,
+                    disabledIndicatorColor = Color.Transparent,
+                    unfocusedContainerColor = PurpleGrey,
+                    focusedContainerColor = PurpleGrey,
+                    focusedIndicatorColor = Blue,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        datepicker.show()
+                    }
+                    .padding(horizontal = 15.dp),
+                shape = RoundedCornerShape(15.dp)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
 
             OutlinedTextField(
                 value = password,
-                onValueChange = { data ->
-                    password = data
+                onValueChange = {
+                    password = it
                 },
                 placeholder = {
                     Text("********")
@@ -252,38 +206,69 @@ fun LoginBody() {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Text(
-                "Forget Password", modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 15.dp), style = TextStyle(textAlign = TextAlign.End)
-            )
 
-            Button(
-                onClick = {
-                    val intent = Intent(
-                        context,
-                        DashboardActivity::class.java
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = terms,
+                    onCheckedChange = {
+                        terms = it
+                    },
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = Blue,
+                        checkmarkColor = White
                     )
-                    intent.putExtra("email",email)
-                    intent.putExtra("password",password)
+                )
+                Text("I agree to terms & Conditions")
+            }
 
-                    context.startActivity(intent)
-                    activity.finish()
-
-                    showDialog = true
-                    if(email == "ram" && password == "password"){
-                        Toast.makeText(context,
-                            "Login successfully",
-                            Toast.LENGTH_LONG).show()
-                    }else{
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar(
-                                "Invalid email or password",
-                                withDismissAction = true
+            Button(onClick = {
+                if(!terms){
+                    Toast.makeText(context,
+                        "Please agree to terms & conditions",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }else {
+                    userViewModel.register(email, password) {
+                        success, message, userId ->
+                        if (success) {
+                            val model = UserModel(
+                                userId = userId,
+                                email = email,
+                                firstName = "",
+                                lastName = "",
+                                dob = selectedDate,
+                                gender = ""
                             )
+                            userViewModel.addUserToDatabase(userId, ) {
+                                success, message ->
+                                if (success) {
+                                    Toast.makeText(
+                                        context,
+                                        message,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        message,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+
+                        } else {
+                            Toast.makeText(
+                                context,
+                                message,
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
-                },
+                }
+            },
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -292,51 +277,22 @@ fun LoginBody() {
                     containerColor = Blue
                 )
             ) {
-                Text("Log In")
+                Text("Sign Up")
             }
 
             Text(buildAnnotatedString {
-                append("Don't have account? ")
+                append("Already have account? ")
 
-                withStyle(SpanStyle(color = Blue)) {
-                    append("Sign up")
+                withStyle(SpanStyle(color = Blue)){
+                    append("Sign In")
                 }
-            }, modifier = Modifier.clickable{
-                val intent = Intent(
-                    context,
-                    card::class.java)
-
-                context.startActivity(intent)
-                activity.finish()
             })
         }
     }
 }
 
-@Composable
-fun SocialMediaCard(modifier: Modifier, image: Int, label: String) {
-    Card(
-        modifier = modifier
-    ) {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Image(
-                painter = painterResource(image),
-                contentDescription = null,
-                modifier = Modifier.size(30.dp)
-            )
-            Spacer(modifier = Modifier.width(20.dp))
-            Text(label)
-        }
-    }
-}
-
-
 @Preview
 @Composable
-fun LoginPreview() {
-    LoginBody()
+fun PreviewRegister(){
+    RegisterBody()
 }

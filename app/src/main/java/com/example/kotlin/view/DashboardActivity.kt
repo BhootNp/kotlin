@@ -1,4 +1,4 @@
-package com.example.kotlin
+package com.example.kotlin.view
 
 import android.app.Activity
 import android.os.Bundle
@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.example.kotlin.R
 import com.example.kotlin.ui.theme.Blue
 import com.example.kotlin.ui.theme.White
 

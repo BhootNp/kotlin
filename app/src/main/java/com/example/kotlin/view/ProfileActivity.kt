@@ -1,4 +1,4 @@
-package com.example.kotlin
+package com.example.kotlin.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.kotlin.R
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

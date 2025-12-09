@@ -1,4 +1,4 @@
-package com.example.kotlin
+package com.example.kotlin.view
 
 import android.app.Activity
 import android.content.Intent
@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.kotlin.R
 import kotlinx.coroutines.delay
 
 class Splash : ComponentActivity() {
