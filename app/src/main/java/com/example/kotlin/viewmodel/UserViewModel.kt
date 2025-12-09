@@ -26,22 +26,32 @@ class UserViewModel (val repo: UserRepo) : ViewModel(){
         repo.addUserToDatabase(userId, callback)
     }
 
-    private val _user = MutableLiveData<UserModel>()
+    private val _users = MutableLiveData<UserModel>()
     val users : MutableLiveData<UserModel>
-    get() = _user
+    get() = _users
 
-    private val _allUsers = MutableLiveData<UserModel>()
-    val allUsers : MutableLiveData<UserModel>
+    private val _allUsers = MutableLiveData<List<UserModel>>()
+    val allUsers : MutableLiveData<List<UserModel>>
         get() = _allUsers
 
     fun getUserById(userId: String)
     {
-
+     repo.getUserById(userId){
+         success , user ->
+         if (success){
+             _users.postValue(user)
+         }
+     }
     }
 
     fun getAllUser()
     {
-
+    repo.getAllUser{
+        success, data ->
+        if (success){
+            _allUsers.postValue(data)
+             }
+        }
     }
 
     fun getCurrentUser() : FirebaseUser ?
