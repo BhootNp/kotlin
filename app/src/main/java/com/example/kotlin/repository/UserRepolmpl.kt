@@ -1,15 +1,36 @@
 package com.example.kotlin.repository
 
 import com.example.kotlin.model.UserModel
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class UserRepolmpl : UserRepo {
+
+    val auth : FirebaseAuth = FirebaseAuth.getInstance()
+
+    val database : FirebaseDatabase = FirebaseDatabase.getInstance()
+
+    val ref : DatabaseReference = database.getReference("Users")
+
+
+
     override fun login(
         email: String,
         password: String,
         callback: (Boolean, String?) -> Unit
     ) {
-        TODO("Not yet implemented")
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+            if(it.isSuccessful){
+                callback(true, "Login Success")
+            }else{
+                callback(false, it.exception?.message)
+            }
+        }
     }
 
     override fun register(
@@ -17,36 +38,83 @@ class UserRepolmpl : UserRepo {
         password: String,
         callback: (Boolean, String, String) -> Unit
     ) {
-        TODO("Not yet implemented")
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+            if(it.isSuccessful){
+                callback(true, "Register Success", "${auth.currentUser?.uid}")
+            }else{
+                callback(true, "${it.exception?.message}", "")
+            }
+        }
     }
 
     override fun addUserToDatabase(
         userId: String,
         callback: (Boolean, String) -> Unit
     ) {
-        TODO("Not yet implemented")
+        ref.child(userId).setValue(userId).addOnCompleteListener {
+            if(it.isSuccessful){
+                    callback(true, "Registered successfully")
+            }else{
+                callback(false, "${it.exception?.message}")
+            }
+        }
     }
 
     override fun getUserById(
         userId: String,
         callback: (Boolean, UserModel) -> Unit
     ) {
-        TODO("Not yet implemented")
+        ref.child(userId).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    val user = snapshot.getValue(UserModel::class.java)
+                    if(user != null){
+                        callback(true,user)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(false, UserModel())
+            }
+        })
     }
 
     override fun getAllUser(callback: (Boolean, List<UserModel>) -> Unit) {
-        TODO("Not yet implemented")
+        ref.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    val allUsers = mutableListOf<UserModel>()
+                    for(user in snapshot.children){
+                        val model = user.getValue(UserModel::class.java)
+                        if(model != null){
+                            allUsers.add(model)
+                        }
+                    }
+                callback(true, allUsers)
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                callback(false , emptyList())
+            }
+        })
     }
 
     override fun getCurrentUser(): FirebaseUser? {
-        TODO("Not yet implemented")
+        return auth.currentUser
     }
 
     override fun deleteUser(
         userId: String,
         callback: (Boolean, String) -> Unit
     ) {
-        TODO("Not yet implemented")
+        ref.child(userId).removeValue().addOnCompleteListener {
+            if(it.isSuccessful){
+                callback(true, "User deleted successfully")
+            }else{
+                callback(false, "${it.exception?.message}")
+            }
+        }
     }
 
     override fun updateProfile(
@@ -54,6 +122,12 @@ class UserRepolmpl : UserRepo {
         model: UserModel,
         callback: (Boolean, String) -> Unit
     ) {
-        TODO("Not yet implemented")
+        ref.child(userId).updateChildren(model as Map<String?, Any?>).addOnCompleteListener {
+            if(it.isSuccessful){
+                callback(true, "Profile updated successfully")
+            }else{
+                callback(false, "${it.exception?.message}")
+            }
+        }
+        }
     }
-}
