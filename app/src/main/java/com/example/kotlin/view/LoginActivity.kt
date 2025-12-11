@@ -60,7 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import com.example.kotlin.R
-import com.example.kotlin.card
+import com.example.kotlin.repository.UserRepolmpl
 import com.example.kotlin.ui.theme.Black
 import com.example.kotlin.ui.theme.Blue
 import com.example.kotlin.ui.theme.PurpleGrey
@@ -89,6 +89,8 @@ fun LoginBody() {
     val activity = context as Activity
 
     val snackbarHostState = remember { SnackbarHostState() }
+
+    val repo = UserRepolmpl()
 
     val coroutineScope = rememberCoroutineScope ()
 
@@ -262,29 +264,35 @@ fun LoginBody() {
 
             Button(
                 onClick = {
-                    val intent = Intent(
-                        context,
-                        DashboardActivity::class.java
-                    )
-                    intent.putExtra("email",email)
-                    intent.putExtra("password",password)
-
-                    context.startActivity(intent)
-                    activity.finish()
-
-                    showDialog = true
-                    if(email == "ram" && password == "password"){
-                        Toast.makeText(context,
-                            "Login successfully",
-                            Toast.LENGTH_LONG).show()
-                    }else{
+                    if (email.isEmpty() || password.isEmpty()) {
                         coroutineScope.launch {
                             snackbarHostState.showSnackbar(
-                                "Invalid email or password",
+                                "Email and password cannot be empty",
                                 withDismissAction = true
                             )
                         }
+                        return@Button
                     }
+
+                    repo.login(email, password) { success, message ->
+                        if (success) {
+                            Toast.makeText(context, "Login successful", Toast.LENGTH_LONG).show()
+
+                            val intent = Intent(context, DashboardActivity::class.java)
+                            intent.putExtra("email", email)
+                            context.startActivity(intent)
+                            activity.finish()
+
+                        } else {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message ?: "Login failed",
+                                    withDismissAction = true
+                                )
+                            }
+                        }
+                    }
+
                 },
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
@@ -296,7 +304,6 @@ fun LoginBody() {
             ) {
                 Text("Log In")
             }
-
             Text(buildAnnotatedString {
                 append("Don't have account? ")
 
@@ -306,7 +313,7 @@ fun LoginBody() {
             }, modifier = Modifier.clickable{
                 val intent = Intent(
                     context,
-                    card::class.java)
+                    RegistrationActivity::class.java)
 
                 context.startActivity(intent)
                 activity.finish()

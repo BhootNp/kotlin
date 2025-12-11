@@ -1,6 +1,8 @@
 package com.example.kotlin.view
 
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -87,6 +89,8 @@ fun RegisterBody(){
     val day = calendar.get(Calendar.DAY_OF_MONTH)
 
     var selectedDate by remember { mutableStateOf("") }
+
+    val activity = context as Activity
 
     val datepicker = DatePickerDialog(
         context,{
@@ -278,11 +282,18 @@ fun RegisterBody(){
             }
 
             Text(buildAnnotatedString {
-                append("Already have account? ")
+                append("Already have an account? ")
 
-                withStyle(SpanStyle(color = Blue)){
+                withStyle(SpanStyle(color = Blue)) {
                     append("Sign In")
                 }
+            }, modifier = Modifier.clickable{
+                val intent = Intent(
+                    context,
+                    LoginActivity::class.java)
+
+                context.startActivity(intent)
+                activity.finish()
             })
         }
     }
