@@ -131,4 +131,18 @@ class UserRepolmpl : UserRepo {
             }
         }
         }
+
+    override fun forgetPassword(
+        email: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    callback(true, "Email sent successfully")
+                } else {
+                    callback(false, "${it.exception?.message}")
+                }
+            }
     }
+}

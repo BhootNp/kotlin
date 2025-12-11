@@ -28,4 +28,9 @@ interface UserRepo {
 
     fun updateProfile(userId: String, model: UserModel,
                       callback: (Boolean, String) -> Unit)
+
+    fun forgetPassword(email: String,
+                        callback: (Boolean, String) -> Unit)
 }
+
+

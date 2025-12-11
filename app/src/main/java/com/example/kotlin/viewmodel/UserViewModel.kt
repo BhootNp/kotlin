@@ -70,4 +70,10 @@ class UserViewModel (val repo: UserRepo) : ViewModel(){
     {
     repo.updateProfile(userId, model, callback)
     }
+
+    fun forgetPassword(email: String,
+                        callback: (Boolean, String) -> Unit)
+    {
+        repo.forgetPassword(email, callback)
+    }
 }
