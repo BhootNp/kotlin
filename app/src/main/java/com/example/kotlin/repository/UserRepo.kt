@@ -13,7 +13,7 @@ interface UserRepo {
     fun register(email: String, password: String,
                  callback: (Boolean, String, String) -> Unit)
 
-    fun addUserToDatabase(userId : String,
+    fun addUserToDatabase(userId : String, model: UserModel,
                     callback: (Boolean , String) -> Unit)
 
     fun getUserById(userId: String,

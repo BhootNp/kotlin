@@ -20,12 +20,12 @@ class UserViewModel (val repo: UserRepo) : ViewModel(){
     repo.register(email, password, callback)
     }
 
-    fun addUserToDatabase(userId : String,
-                          callback: (Boolean , String) -> Unit)
-    {
-        repo.addUserToDatabase(userId, callback)
+    fun addUserToDatabase(userId: String,
+                          model: UserModel,
+                          callback: (Boolean, String) -> Unit
+    ){
+        repo.addUserToDatabase(userId,model, callback)
     }
-
     private val _users = MutableLiveData<UserModel>()
     val users : MutableLiveData<UserModel>
     get() = _users

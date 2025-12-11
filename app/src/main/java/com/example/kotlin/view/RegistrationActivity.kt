@@ -242,31 +242,28 @@ fun RegisterBody(){
                                 dob = selectedDate,
                                 gender = ""
                             )
-                            userViewModel.addUserToDatabase(userId, ) {
-                                success, message ->
-                                if (success) {
-                                    Toast.makeText(
-                                        context,
+                            userViewModel.addUserToDatabase(userId,model){
+                                    success,message->
+                                if(success){
+                                    Toast.makeText(context,
                                         message,
                                         Toast.LENGTH_LONG
                                     ).show()
-                                } else {
-                                    Toast.makeText(
-                                        context,
+                                }else{
+                                    Toast.makeText(context,
                                         message,
                                         Toast.LENGTH_LONG
                                     ).show()
                                 }
                             }
-
-                        } else {
-                            Toast.makeText(
-                                context,
+                        }else{
+                            Toast.makeText(context,
                                 message,
                                 Toast.LENGTH_LONG
                             ).show()
                         }
                     }
+
                 }
             },
                 shape = RoundedCornerShape(10.dp),

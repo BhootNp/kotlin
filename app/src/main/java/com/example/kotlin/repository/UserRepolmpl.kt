@@ -49,9 +49,10 @@ class UserRepolmpl : UserRepo {
 
     override fun addUserToDatabase(
         userId: String,
+        model: UserModel,
         callback: (Boolean, String) -> Unit
     ) {
-        ref.child(userId).setValue(userId).addOnCompleteListener {
+        ref.child(userId).setValue(model).addOnCompleteListener {
             if(it.isSuccessful){
                     callback(true, "Registered successfully")
             }else{
