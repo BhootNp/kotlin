@@ -259,7 +259,16 @@ fun LoginBody() {
             Text(
                 "Forget Password", modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 15.dp), style = TextStyle(textAlign = TextAlign.End)
+                    .padding(horizontal = 15.dp)
+                    .clickable {
+                        val intent = Intent(
+                            context,
+                            ForgetPasswordActivity::class.java
+                        )
+
+                        context.startActivity(intent)
+                    },
+                style = TextStyle(textAlign = TextAlign.End)
             )
 
             Button(
