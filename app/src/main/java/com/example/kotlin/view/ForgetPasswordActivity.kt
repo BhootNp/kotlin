@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +29,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.kotlin.repository.UserRepolmpl
 import com.example.kotlin.ui.theme.Blue
@@ -51,6 +55,8 @@ fun ForgetBody() {
     val userViewModel = remember { UserViewModel(UserRepolmpl()) }
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
+    val activity = context as ComponentActivity
+
     Scaffold { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding)
@@ -142,6 +148,20 @@ fun ForgetBody() {
                 ) {
                     Text("Forget Password")
                 }
+                Text(buildAnnotatedString {
+                    append("Already have an account? ")
+
+                    withStyle(SpanStyle(color = Blue)) {
+                        append("Log in")
+                    }
+                }, modifier = Modifier.clickable{
+                    val intent = Intent(
+                        context,
+                        LoginActivity::class.java)
+
+                    context.startActivity(intent)
+                    activity.finish()
+                })
             }
         }
     }

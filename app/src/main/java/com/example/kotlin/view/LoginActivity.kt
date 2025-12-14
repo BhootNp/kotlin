@@ -257,9 +257,11 @@ fun LoginBody() {
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                "Forget Password", modifier = Modifier
+
+                "Forget Password?",color = Color.Blue, modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 15.dp)
+                    .padding(top = 10.dp)
                     .clickable {
                         val intent = Intent(
                             context,
