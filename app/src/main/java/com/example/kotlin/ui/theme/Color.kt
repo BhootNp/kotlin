@@ -6,7 +6,6 @@ val PurpleGrey80 = Color(0xFFCCC2DC)
 
 val Pink80 = Color(0xFFEFB8C8)
 
-
 val RixColor = Color(color = 0xFF6ED6B5)
 
 val CreamWhite = Color(color = 0xFFFFFFFF)

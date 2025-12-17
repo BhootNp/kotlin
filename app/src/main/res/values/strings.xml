@@ -8,4 +8,6 @@
     <string name="title_activity_registration">Registration</string>
     <string name="title_activity_dashboard">DashboardActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_add_prodcut">AddProdcutActivity</string>
+    <string name="title_activity_add_product">AddProductActivity</string>
 </resources>
