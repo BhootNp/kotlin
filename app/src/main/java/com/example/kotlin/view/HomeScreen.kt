@@ -13,13 +13,18 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.kotlin.R
+import com.example.kotlin.repository.ProductRepoImpl
+import com.example.kotlin.viewmodel.ProductViewModel
 
 @Composable
 fun HomeScreen() {
@@ -34,109 +39,128 @@ fun HomeScreen() {
         R.drawable.hi1
     )
 
+    val context = LocalContext.current
+
+    val productViewModel = remember { ProductViewModel(ProductRepoImpl()) }
+
+    LaunchedEffect(Unit) {
+        productViewModel.getAllProduct()
+    }
+
+    val allProducts = productViewModel.allProducts
+
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFF6CC))
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(22.dp)
+            .background(Color.White),
+
     ) {
 
-        item {
-            Text(
-                text = "Good Morning ☀️",
-                style = MaterialTheme.typography.headlineSmall
-            )
-        }
-
-        item {
-            SectionTitle("Stories")
-
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(data.size) { index ->
-                    Card(
-                        shape = RoundedCornerShape(12.dp),
-                        elevation = CardDefaults.cardElevation(4.dp),
-                        modifier = Modifier.size(85.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(data[index]),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                }
-            }
-        }
-
-        // Feature Banner
-        item {
-            Card(
-                shape = RoundedCornerShape(20.dp),
-                elevation = CardDefaults.cardElevation(6.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.hi3),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
-                )
-            }
-        }
-
-        // Recommended Row
-        item {
-            SectionTitle("Recommended for you")
-
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(data.size) { index ->
-                    Card(
-                        shape = RoundedCornerShape(14.dp),
-                        elevation = CardDefaults.cardElevation(4.dp),
-                        modifier = Modifier.size(100.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(data[index]),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                }
-            }
-        }
-
-        // Grid Items
-        item {
-            SectionTitle("Popular Items")
-
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(14.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp),
-                modifier = Modifier
-                    .height(420.dp)
-                    .fillMaxWidth()
-            ) {
-                items(data.size) { index ->
-                    Card(
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = CardDefaults.cardElevation(6.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(150.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(data[index]),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                }
-            }
-        }
     }
+//    LazyColumn(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(Color(0xFFFFF6CC))
+//            .padding(16.dp),
+//        verticalArrangement = Arrangement.spacedBy(22.dp)
+//    ) {
+//
+//        item {
+//            Text(
+//                text = "Good Morning ☀️",
+//                style = MaterialTheme.typography.headlineSmall
+//            )
+//        }
+//
+//        item {
+//            SectionTitle("Stories")
+//
+//            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+//                items(data.size) { index ->
+//                    Card(
+//                        shape = RoundedCornerShape(12.dp),
+//                        elevation = CardDefaults.cardElevation(4.dp),
+//                        modifier = Modifier.size(85.dp)
+//                    ) {
+//                        Image(
+//                            painter = painterResource(data[index]),
+//                            contentDescription = null,
+//                            contentScale = ContentScale.Crop
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//
+//        // Feature Banner
+//        item {
+//            Card(
+//                shape = RoundedCornerShape(20.dp),
+//                elevation = CardDefaults.cardElevation(6.dp),
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(180.dp)
+//            ) {
+//                Image(
+//                    painter = painterResource(R.drawable.hi3),
+//                    contentDescription = null,
+//                    contentScale = ContentScale.Crop
+//                )
+//            }
+//        }
+//
+//        // Recommended Row
+//        item {
+//            SectionTitle("Recommended for you")
+//
+//            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+//                items(data.size) { index ->
+//                    Card(
+//                        shape = RoundedCornerShape(14.dp),
+//                        elevation = CardDefaults.cardElevation(4.dp),
+//                        modifier = Modifier.size(100.dp)
+//                    ) {
+//                        Image(
+//                            painter = painterResource(data[index]),
+//                            contentDescription = null,
+//                            contentScale = ContentScale.Crop
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//
+//        // Grid Items
+//        item {
+//            SectionTitle("Popular Items")
+//
+//            LazyVerticalGrid(
+//                columns = GridCells.Fixed(2),
+//                horizontalArrangement = Arrangement.spacedBy(14.dp),
+//                verticalArrangement = Arrangement.spacedBy(14.dp),
+//                modifier = Modifier
+//                    .height(420.dp)
+//                    .fillMaxWidth()
+//            ) {
+//                items(data.size) { index ->
+//                    Card(
+//                        shape = RoundedCornerShape(16.dp),
+//                        elevation = CardDefaults.cardElevation(6.dp),
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .height(150.dp)
+//                    ) {
+//                        Image(
+//                            painter = painterResource(data[index]),
+//                            contentDescription = null,
+//                            contentScale = ContentScale.Crop
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
 
 @Composable
