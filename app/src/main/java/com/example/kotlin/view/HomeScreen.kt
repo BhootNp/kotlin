@@ -1,179 +1,259 @@
 package com.example.kotlin.view
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import android.widget.Toast
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.kotlin.R
+import com.example.kotlin.model.ProductModel
 import com.example.kotlin.repository.ProductRepoImpl
+import com.example.kotlin.ui.theme.Blue
+import com.example.kotlin.ui.theme.PurpleGrey80
 import com.example.kotlin.viewmodel.ProductViewModel
 
 @Composable
 fun HomeScreen() {
 
-    val data = listOf(
-        R.drawable.hi1,
-        R.drawable.h2,
-        R.drawable.hi3,
-        R.drawable.hi1,
-        R.drawable.hi1,
-        R.drawable.hi1,
-        R.drawable.hi1
-    )
-
     val context = LocalContext.current
 
     val productViewModel = remember { ProductViewModel(ProductRepoImpl()) }
 
-    LaunchedEffect(Unit) {
+
+    var pname by remember { mutableStateOf("") }
+    var pPrice by remember { mutableStateOf("") }
+    var pDesc by remember { mutableStateOf("") }
+
+    val loading = productViewModel.loading.observeAsState(initial = false)
+    val products = productViewModel.products.observeAsState(initial = null)
+
+    LaunchedEffect(products.value) {
         productViewModel.getAllProduct()
+
+
+        products.value?.let {
+            pname = it.name
+            pDesc = it.description
+            pPrice = it.price.toString()
+        }
     }
 
-    val allProducts = productViewModel.allProducts
 
+    val allProducts = productViewModel.allProducts
+        .observeAsState(initial = emptyList())
+
+    var showDialog by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
-
     ) {
+        item {
+            if(showDialog){
+                AlertDialog(
+                    onDismissRequest = {
+                        showDialog = false
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            var model = ProductModel(
+                                products.value!!.productId,
+                                pname,
+                                pPrice.toDouble(),
+                                pDesc,
+                                ""
+
+                            )
+                            productViewModel.updateProduct(model){
+                                    success,message->
+                                if(success){
+                                    showDialog = false
+                                    Toast.makeText(context,
+                                        message,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }else{
+                                    Toast.makeText(context,
+                                        message,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        }) {
+                            Text("Update")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            showDialog = false
+                        }) {
+                            Text("Cancel")
+                        }
+                    },
+                    title = {
+                        Text("Update Product")
+                    },
+                    text = {
+                        Column {
+                            OutlinedTextField(
+                                value = pname,
+                                onValueChange = { data ->
+                                    pname = data
+                                },
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Email
+                                ),
+                                placeholder = {
+                                    Text("Product name")
+                                },
+                                colors = TextFieldDefaults.colors(
+                                    unfocusedContainerColor = PurpleGrey80,
+                                    focusedContainerColor = PurpleGrey80,
+                                    focusedIndicatorColor = Blue,
+                                    unfocusedIndicatorColor = Color.Transparent
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 15.dp),
+                                shape = RoundedCornerShape(15.dp)
+                            )
+
+
+                            Spacer(modifier = Modifier.height(20.dp))
+                            OutlinedTextField(
+                                value = pPrice,
+                                onValueChange = { data ->
+                                    pPrice = data
+                                },
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Email
+                                ),
+                                placeholder = {
+                                    Text("Product price")
+                                },
+                                colors = TextFieldDefaults.colors(
+                                    unfocusedContainerColor = PurpleGrey80,
+                                    focusedContainerColor = PurpleGrey80,
+                                    focusedIndicatorColor = Blue,
+                                    unfocusedIndicatorColor = Color.Transparent
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 15.dp),
+                                shape = RoundedCornerShape(15.dp)
+                            )
+
+
+                            Spacer(modifier = Modifier.height(20.dp))
+                            OutlinedTextField(
+                                value = pDesc,
+                                onValueChange = { data ->
+                                    pDesc = data
+                                },
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Email
+                                ),
+                                placeholder = {
+                                    Text("Product desc")
+                                },
+                                colors = TextFieldDefaults.colors(
+                                    unfocusedContainerColor = PurpleGrey80,
+                                    focusedContainerColor = PurpleGrey80,
+                                    focusedIndicatorColor = Blue,
+                                    unfocusedIndicatorColor = Color.Transparent
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 15.dp),
+                                shape = RoundedCornerShape(15.dp)
+                            )
+
+
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                        }
+                    }
+                )
+            }
+        }
+        if(loading.value){
+            item {
+                CircularProgressIndicator()
+            }
+        }else{
+            items(allProducts.value!!.size){index->
+                var data = allProducts.value!![index]
+
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 15.dp)
+                ){
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text(data.name)
+                        Text(data.price.toString())
+                        Text(data.description)
+                        IconButton(onClick = {
+                            showDialog = true
+                            productViewModel.getProductById(data.productId)
+                        }) {
+                            Icon(Icons.Default.Edit,contentDescription = null)
+                        }
+                        IconButton(onClick = {
+                            productViewModel.deleteProduct(data.productId){
+                                    success,message->
+                                if(success){
+                                    Toast.makeText(context,
+                                        message,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }else{
+                                    Toast.makeText(context,
+                                        message,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        }) {
+                            Icon(Icons.Default.Delete,contentDescription = null)
+                        }
+                    }
+                }
+            }
+        }
 
     }
-//    LazyColumn(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(Color(0xFFFFF6CC))
-//            .padding(16.dp),
-//        verticalArrangement = Arrangement.spacedBy(22.dp)
-//    ) {
-//
-//        item {
-//            Text(
-//                text = "Good Morning ☀️",
-//                style = MaterialTheme.typography.headlineSmall
-//            )
-//        }
-//
-//        item {
-//            SectionTitle("Stories")
-//
-//            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-//                items(data.size) { index ->
-//                    Card(
-//                        shape = RoundedCornerShape(12.dp),
-//                        elevation = CardDefaults.cardElevation(4.dp),
-//                        modifier = Modifier.size(85.dp)
-//                    ) {
-//                        Image(
-//                            painter = painterResource(data[index]),
-//                            contentDescription = null,
-//                            contentScale = ContentScale.Crop
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//
-//        // Feature Banner
-//        item {
-//            Card(
-//                shape = RoundedCornerShape(20.dp),
-//                elevation = CardDefaults.cardElevation(6.dp),
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(180.dp)
-//            ) {
-//                Image(
-//                    painter = painterResource(R.drawable.hi3),
-//                    contentDescription = null,
-//                    contentScale = ContentScale.Crop
-//                )
-//            }
-//        }
-//
-//        // Recommended Row
-//        item {
-//            SectionTitle("Recommended for you")
-//
-//            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-//                items(data.size) { index ->
-//                    Card(
-//                        shape = RoundedCornerShape(14.dp),
-//                        elevation = CardDefaults.cardElevation(4.dp),
-//                        modifier = Modifier.size(100.dp)
-//                    ) {
-//                        Image(
-//                            painter = painterResource(data[index]),
-//                            contentDescription = null,
-//                            contentScale = ContentScale.Crop
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//
-//        // Grid Items
-//        item {
-//            SectionTitle("Popular Items")
-//
-//            LazyVerticalGrid(
-//                columns = GridCells.Fixed(2),
-//                horizontalArrangement = Arrangement.spacedBy(14.dp),
-//                verticalArrangement = Arrangement.spacedBy(14.dp),
-//                modifier = Modifier
-//                    .height(420.dp)
-//                    .fillMaxWidth()
-//            ) {
-//                items(data.size) { index ->
-//                    Card(
-//                        shape = RoundedCornerShape(16.dp),
-//                        elevation = CardDefaults.cardElevation(6.dp),
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .height(150.dp)
-//                    ) {
-//                        Image(
-//                            painter = painterResource(data[index]),
-//                            contentDescription = null,
-//                            contentScale = ContentScale.Crop
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
-}
-
-@Composable
-fun SectionTitle(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.titleMedium,
-        modifier = Modifier.padding(bottom = 8.dp)
-    )
 }
 
 @Preview
 @Composable
-fun HomePreview() {
+fun HomePre() {
     HomeScreen()
 }
