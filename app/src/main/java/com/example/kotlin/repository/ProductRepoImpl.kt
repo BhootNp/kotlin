@@ -1,5 +1,7 @@
 package com.example.kotlin.repository
 
+import android.content.Context
+import android.net.Uri
 import com.example.kotlin.model.ProductModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -122,6 +124,21 @@ class ProductRepoImpl : ProductRepo {
                 callback(false,error.message,emptyList())
             }
         })
+    }
+
+    override fun uploadImage(
+        context: Context,
+        imageUri: Uri,
+        callback: (String?) -> Unit
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getFileNameFromUri(
+        context: Context,
+        uri: Uri
+    ): String? {
+        TODO("Not yet implemented")
     }
 
 }

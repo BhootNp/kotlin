@@ -1,5 +1,7 @@
 package com.example.kotlin.viewmodel
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.kotlin.model.ProductModel
 import com.example.kotlin.repository.UserRepo
@@ -49,10 +51,22 @@ class ProductViewModel(val repo: ProductRepo) : ViewModel() {
         }
     }
 
-//    fun getProductByCategory(
-//        categoryId: String,
-//        callback: (Boolean, String, List<ProductModel>?) -> Unit
-//    ) {
-//
-//    }
+    fun getProductByCategory(
+        categoryId: String,
+        callback: (Boolean, String, List<ProductModel>?) -> Unit
+    ) {
+
+    }
+
+    fun uploadImage(
+        context: Context, imageUri: Uri, callback: (String?) -> Unit)
+    {
+
+    }
+
+    fun getFileNameFromUri(context: Context, uri: Uri): String?
+    {
+
+    }
+
 }
