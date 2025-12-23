@@ -23,7 +23,7 @@ class ProductRepoImpl : ProductRepo {
 
     private val cloudinary = Cloudinary(
         mapOf(
-            "cloud_name" to "root",
+            "cloud_name" to "dgvtgn9jt",
             "api_key" to "497641378155669",
             "api_secret" to "sxLBQY8yknA2NRRHza2fC3Dc_7c"
         )

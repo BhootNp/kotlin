@@ -61,12 +61,12 @@ class ProductViewModel(val repo: ProductRepo) : ViewModel() {
     fun uploadImage(
         context: Context, imageUri: Uri, callback: (String?) -> Unit)
     {
-
+    repo.uploadImage(context,imageUri,callback)
     }
 
-    fun getFileNameFromUri(context: Context, uri: Uri): String?
-    {
-
-    }
+//    fun getFileNameFromUri(context: Context, uri: Uri): String?
+//    {
+//
+//    }
 
 }
